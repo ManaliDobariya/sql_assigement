@@ -1,4 +1,5 @@
 use hr_db;
+
 drop table customer;
 create table customer(
 	ID INT auto_increment primary key,
@@ -12,7 +13,9 @@ insert into customer(Hire_Date) values("2015/04/13");
 insert into customer(Hire_Date) values("2016/06/03");
 insert into customer(Hire_Date) values("2017/08/08");
     
+
 select * from customer;
+
 
 -- 1) Find the date difference between the hire date and resignation_date for all the
 -- employees. Display in no. of days, months and year(1 year 3 months 5 days).
@@ -35,13 +38,18 @@ select DATEDIFF(Resignation_Date, Hire_Date) ,FLOOR(DATEDIFF(Resignation_Date, H
 select date_format( Hire_Date,"%d/%m/%Y") as "Hire date",  IFNULL(date_format(Resignation_Date,"%b %D, %X"), "DEC, 01th 1900")  as "Registration date"
 from customer;
 
--- 3) Calcuate experience of the employee till date in Years and months(example 1 year and 3
--- months)
+-- 3) Calcuate experience of the employee till date in Years and months(example 1 year and 3 months)
+SELECT ID, Hire_Date, 
+    CONCAT(
+        FLOOR(DATEDIFF(CURRENT_DATE, Hire_Date) / 365), ' years ',
+        FLOOR((DATEDIFF(CURRENT_DATE, Hire_Date) % 365) / 30.436875), ' months'
+    ) AS experience
+FROM 
+    customer;
+
 -- Use Getdate() as input date for the below three questions.
 -- 4) Display the count of days in the previous quarter.
 SELECT DATEDIFF(LAST_DAY(DATE_SUB(CURDATE(), INTERVAL QUARTER(CURDATE()) - 2 QUARTER)), 
                DATE_ADD(DATE_SUB(CURDATE(), INTERVAL QUARTER(CURDATE()) - 2 QUARTER), INTERVAL 1 DAY)) AS DaysInPreviousQuarter;
 
--- 5) Fetch the previous Quarter's second week's first day's date
--- 6) Fetch the financial year's 15th week's dates (Format: Mon DD YYYY)
--- 7) Find out the date that corresponds to the last Saturday of January, 2015 using with
+
